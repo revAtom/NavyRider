@@ -6,16 +6,20 @@ public class PlayerInput : MonoBehaviour
 {
     protected int turnAngle = 1;
 
-    public void Update()
+    protected float TurnAngle()
     {
-        PlayerTurns();
-    }
-
-    void PlayerTurns()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKey(KeyCode.A))
         {
-            turnAngle = -turnAngle;
+            turnAngle = -1;
         }
+        else if (Input.GetKey(KeyCode.D))
+        {
+            turnAngle = 1;
+        }
+        else
+        {
+            turnAngle = 0;
+        }
+        return turnAngle;
     }
 }
