@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Sirenix.OdinInspector;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -8,12 +7,30 @@ public class PlayerMovement : PlayerInput
 {
     private Rigidbody playerRb;
 
-    public float forwardAccel = 1, maxSpeed = 300, turnsStrength = 100, mulitipier = 1000, gravityForce = 10f, dragValue = .3f;
+    [GUIColor(.3f,1,.6f)]
+    [TabGroup("Movement")]
+    public float forwardAccel = 1, maxSpeed = 300, turnsStrength = 100, mulitipier = 1000;
 
+    [GUIColor(1.6f,.4f,.6f)]
+    [TabGroup("Physics")]
+    public float gravityForce = 10f, dragValue = .3f;
+
+    [GUIColor(.75f,.1f,.6f)]
+    [TabGroup("Gravity")]
+    [ShowInInspector]
     private bool grounded;
 
+    [GUIColor(.75f, .1f, .6f)]
+    [TabGroup("Gravity")]
     public LayerMask whatIsGround;
+
+    [GUIColor(.75f, .1f, .6f)]
+    [TabGroup("Gravity")]
     public float groundRayLength = .5f;
+  
+    [GUIColor(.75f, .1f, .6f)]
+    [TabGroup("Gravity")]
+    [SceneObjectsOnly]
     public Transform groundRayPoint;
     void Awake()
     {
