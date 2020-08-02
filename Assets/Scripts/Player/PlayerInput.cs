@@ -8,6 +8,7 @@ public class PlayerInput : MonoBehaviour
 
     protected float TurnAngle()
     {
+#if UNITY_EDITOR
         if (Input.GetKey(KeyCode.A))
         {
             turnAngle = -1;
@@ -22,4 +23,5 @@ public class PlayerInput : MonoBehaviour
         }
         return turnAngle;
     }
+#endif
 }
