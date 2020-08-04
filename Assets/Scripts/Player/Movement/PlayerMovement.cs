@@ -47,7 +47,16 @@ public class PlayerMovement : PlayerInput
     [SceneObjectsOnly]
     public Camera playersCamera;
 
-  private enum Modifiers : int { multiplierModifierLow = 500, multiplierModifierMedium = 1200, multiplierModifierHeight = 2000 };
+    [TabGroup("Visualise")]
+    [GUIColor(.8f, .3f, .3f)]
+    [SceneObjectsOnly]
+    public ParticleSystem trailParticles;
+
+    [TabGroup("Modifiers")]
+    [GUIColor(.74f, .75f, .6f)]
+    [ShowInInspector]
+    [Range(500, 1500)]
+    private int multiplierModifierLow = 500, multiplierModifierMedium = 1200;
 
     [TabGroup("Modifiers")]
     [GUIColor(.74f, .75f, .6f)]
@@ -58,8 +67,6 @@ public class PlayerMovement : PlayerInput
     void Awake()
     {
         playerRb = GetComponent<Rigidbody>();
-
-
     }
     void Update()
     {
@@ -68,22 +75,24 @@ public class PlayerMovement : PlayerInput
 
         if (TurnAngle() != 0)
         {
+            mulitipier = multiplierModifierLow;
+
             playerVisualiseAnim.SetBool("IsTurn", true);
-            mulitipier = (int)Modifiers.multiplierModifierLow;
         }
         else if (TurnAngle() == 0)
         {
+            mulitipier = multiplierModifierMedium;
+
             playerVisualiseAnim.SetBool("IsTurn", false);
-            mulitipier = (int)Modifiers.multiplierModifierMedium;
         }
     }
     #region Movement
     protected void TurnPlayer(float Angle)
     {
-        playerVisualiseAnim.SetFloat("angleOfTurn", Angle);
-
         transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles
-    + (new Vector3(0, Angle * turnsStrength * Time.fixedDeltaTime, 0) / 2));
+    + (new Vector3(0, Angle * turnsStrength * Time.deltaTime, 0) / 2));
+
+        playerVisualiseAnim.SetFloat("angleOfTurn", Angle);
     }
     void FixedUpdate()
     {
@@ -95,6 +104,15 @@ public class PlayerMovement : PlayerInput
             grounded = true;
 
             transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
+
+            if (hit.collider != null && hit.collider.gameObject.tag == "Rump")
+            {
+                trailParticles.Stop();
+            }
+            else
+            {
+                trailParticles.Play();
+            }
         }
 
         if (grounded)
@@ -102,8 +120,6 @@ public class PlayerMovement : PlayerInput
             playersCamera.fieldOfView = cameraFiealOfViewFar;
 
             playerRb.drag = dragValue;
-
-            playerRb.AddRelativeForce(Vector3.forward * forwardAccel * mulitipier * Time.fixedDeltaTime, ForceMode.Acceleration);
         }
         else
         {
@@ -111,21 +127,10 @@ public class PlayerMovement : PlayerInput
 
             playerRb.drag = (dragValue / 3);
 
-            playerRb.AddRelativeForce(Vector3.up * -gravityForce * mulitipier * Time.fixedDeltaTime, ForceMode.Force);
+            playerRb.AddRelativeForce(Vector3.up * -gravityForce * 1000 * Time.fixedDeltaTime, ForceMode.Force);
         }
-    }
-    #endregion
 
-    #region CollisionsTracker
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag == "Rump")
-            mulitipier = (int)Modifiers.multiplierModifierHeight;
-    }
-    public void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.tag == "Rump")
-            mulitipier = (int)Modifiers.multiplierModifierMedium;
+        playerRb.AddRelativeForce(Vector3.forward * forwardAccel * mulitipier * Time.fixedDeltaTime, ForceMode.Acceleration);
     }
     #endregion
 }
