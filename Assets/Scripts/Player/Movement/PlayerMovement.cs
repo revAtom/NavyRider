@@ -29,7 +29,7 @@ public class PlayerMovement : PlayerInput
 
     [GUIColor(.75f, .1f, .6f)]
     [TabGroup("Gravity")]
-    [Range(.1f, 2)]
+    [Range(.1f, 3)]
     public float groundRayLength = .5f;
 
     [TabGroup("Gravity")]
@@ -46,11 +46,6 @@ public class PlayerMovement : PlayerInput
     [GUIColor(.8f, .3f, .3f)]
     [SceneObjectsOnly]
     public Camera playersCamera;
-
-    [TabGroup("Visualise")]
-    [GUIColor(.8f, .3f, .3f)]
-    [SceneObjectsOnly]
-    public ParticleSystem trailParticles;
 
     [TabGroup("Modifiers")]
     [GUIColor(.74f, .75f, .6f)]
@@ -90,7 +85,7 @@ public class PlayerMovement : PlayerInput
     protected void TurnPlayer(float Angle)
     {
         transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles
-    + (new Vector3(0, Angle * turnsStrength * Time.deltaTime, 0) / 2));
+    + (new Vector3(0, Angle * turnsStrength * Time.deltaTime, 0) / 1.5f));
 
         playerVisualiseAnim.SetFloat("angleOfTurn", Angle);
     }
@@ -104,15 +99,6 @@ public class PlayerMovement : PlayerInput
             grounded = true;
 
             transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
-
-            if (hit.collider != null && hit.collider.gameObject.tag == "Rump")
-            {
-                trailParticles.Stop();
-            }
-            else
-            {
-                trailParticles.Play();
-            }
         }
 
         if (grounded)
@@ -130,7 +116,10 @@ public class PlayerMovement : PlayerInput
             playerRb.AddRelativeForce(Vector3.up * -gravityForce * 1000 * Time.fixedDeltaTime, ForceMode.Force);
         }
 
-        playerRb.AddRelativeForce(Vector3.forward * forwardAccel * mulitipier * Time.fixedDeltaTime, ForceMode.Acceleration);
+        if (playerRb.velocity.magnitude <= maxSpeed)
+            playerRb.velocity = Vector3.ClampMagnitude(playerRb.velocity, maxSpeed);
+
+        playerRb.AddRelativeForce(Vector3.forward * forwardAccel * mulitipier * Time.fixedDeltaTime, ForceMode.);
     }
     #endregion
 }

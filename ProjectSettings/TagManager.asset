@@ -14,7 +14,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - PlayerSee
   - 
   - 
   - 
@@ -41,4 +41,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: PlayerSee
+    uniqueID: 1512109295
     locked: 0

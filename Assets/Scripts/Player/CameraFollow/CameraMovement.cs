@@ -21,7 +21,7 @@ public class CameraMovement : MonoBehaviour
     public Vector3 offset;
     #endregion
 
-    void LateUpdate()
+    void Update()
     {
         Vector3 desiredPosition = target.position + offset;
         Vector3 smootherPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
