@@ -10,7 +10,7 @@ public class PlayerMovement : PlayerInput
 
     [TabGroup("Movement")]
     [GUIColor(.3f, 1, .6f)]
-    [Range(1, 3000)]
+    [Range(0, 3000)]
     public int forwardAccel = 1, maxSpeed = 300, turnsStrength = 100, mulitipier = 1200;
 
     [TabGroup("Physics")]
@@ -49,14 +49,12 @@ public class PlayerMovement : PlayerInput
 
     [TabGroup("Modifiers")]
     [GUIColor(.74f, .75f, .6f)]
-    [ShowInInspector]
     [Range(500, 1500)]
-    private int multiplierModifierLow = 500, multiplierModifierMedium = 1200;
+    public int multiplierModifierLow = 500, multiplierModifierMedium = 1200;
 
     [TabGroup("Modifiers")]
     [GUIColor(.74f, .75f, .6f)]
     [ShowInInspector]
-    [Range(30, 80)]
     private float cameraFiealOfViewNear = 45, cameraFiealOfViewFar = 50;
     #endregion
     void Awake()
@@ -116,10 +114,7 @@ public class PlayerMovement : PlayerInput
             playerRb.AddRelativeForce(Vector3.up * -gravityForce * 1000 * Time.fixedDeltaTime, ForceMode.Force);
         }
 
-        if (playerRb.velocity.magnitude <= maxSpeed)
-            playerRb.velocity = Vector3.ClampMagnitude(playerRb.velocity, maxSpeed);
-
-        playerRb.AddRelativeForce(Vector3.forward * forwardAccel * mulitipier * Time.fixedDeltaTime, ForceMode.);
+        playerRb.AddRelativeForce(Vector3.forward * forwardAccel * mulitipier * Time.fixedDeltaTime, ForceMode.Force);
     }
     #endregion
 }
