@@ -19,13 +19,13 @@ public class Floater : MonoBehaviour
 
     [BoxGroup("Floating Modifier")]
     [GUIColor(.74f, .5f, .74f)]
-    [Range(.1f, 3)]
+    [Range(-3, 3)]
     public float depthBeforeSubmerged = 1f;
 
     [BoxGroup("Floating Modifier")]
     [GUIColor(.74f, .5f, .74f)]
     [Range(50f, 100)]
-    public float displacementAmount = 3f;
+    public float displacementAmount = 60f;
     #endregion
 
     private void Awake()
@@ -34,11 +34,11 @@ public class Floater : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (shipBottomLevel.position.y <=  200)
+        if (shipBottomLevel.localPosition.y <=  (waterLevel.localPosition.y + 6))
         {
-            float displacementMultiplier = Mathf.Clamp01(-transform.position.y / depthBeforeSubmerged) * displacementAmount;
+            float displacementMultiplier = Mathf.Clamp01(-transform.localPosition.y / depthBeforeSubmerged) * displacementAmount;
 
-            floatingRb.AddForce(new Vector3(0f, Mathf.Abs(Physics.gravity.y) * displacementMultiplier * Time.fixedDeltaTime, 0), ForceMode.Acceleration);
+            floatingRb.AddRelativeForce(new Vector3(0f, Mathf.Abs(Physics.gravity.y) * displacementMultiplier * Time.fixedDeltaTime, 0), ForceMode.Acceleration);
         }
     }
 }
