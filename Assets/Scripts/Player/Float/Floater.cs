@@ -34,7 +34,7 @@ public class Floater : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (shipBottomLevel.localPosition.y <=  (waterLevel.localPosition.y + 6))
+        if (shipBottomLevel.localPosition.y <=  (waterLevel.position.y + 6))
         {
             float displacementMultiplier = Mathf.Clamp01(-transform.localPosition.y / depthBeforeSubmerged) * displacementAmount;
 
